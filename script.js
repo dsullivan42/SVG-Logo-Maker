@@ -1,23 +1,24 @@
 const inquirer = require('inquirer'); 
-const fs = require('fs');
-const { userInfo } = require('os');
-//importing the inquirer and fs modules
-// const {Square, Circle, Triangle} = require('./lib/shapes.test.js'); // NEEDS TO BE CHANGED
-//list of the questions that the user will be asked
-const questions = [
+const { writeFile } = require('fs').promises;
+const  { Triangle, Square, Circle } = require('./Develop/lib/shapes');
+const SVG = require('./Develop/lib/svg');
+
+const createSVGPrompt = () => {
+
+    return inquirer.prompt([
     {
         type: "input",
-        name: "logo-text",
+        name: "text",
         message: "Enter the three letter abbreviation for your company: "
     },
     {
         type: "input",
-        name: "text-color",
+        name: "textColor",
         message: "Please enter the color of the text, or the hexadecimal number for the color you'd like for your text."
     },
     {
         type:"input",
-        name: "shape-color",
+        name: "color",
         message: "Please enter the color of the shape, or the hexadecimal number for the color you'd like for your shape."
     },
     {
@@ -26,46 +27,29 @@ const questions = [
         message: "Please choose the shape you'd like for your logo.",
         choices: ["Square", "Circle", "Triangle"]
     }
-];
-    //class for the shapes that will be used in the logo, included in the SVG
-    class SVG {
-        constructor() {
-            this.textElement ='';
-            this.shapeElement ='';
-        }
-        render() { 
-            //setting the text and shape elements to be rendered in the SVG
-         return `<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">${this.shapeElement}${this.textElement}</svg>`;
-        }
-        setText(text, color){
-            this.textElement = '<text x="150" y="125" font-size="60" text-anchor="middle" fill="' + color + '">' + text + '</text>';
-        }
-        setShape(shape){
-            this.shapeElement = shape.render();
-        }
+]) .then ((res) => {
+    console.log(res);
+    let userSVGShape;
+
+    if (res.shape === "Square") {
+        userSVGShape = new Square();
+    } else if (res.shape === "Circle") {
+        userSVGShape = new Circle();
+    } else if (res.shape === "Triangle") {
+        userSVGShape = new Triangle();
     }
 
-    // writeToFile function to write the answers to the file, confirming that the file has been written, or throwing an error if it has not
-    function writeToFile(fileName, answers) {
-        console.log("Transfering answers to file now!")
-        fs.writeFile(fileName, answers, (err) => {
-            if (err) throw err;
-            console.log("File saved! Congratulations! You have generated your new logo!");
-        });
-    }
-    //prompts the user with the questions, and then takes the answers and writes them to the file
-    const answers = await inquirer.prompt(questions);
-    // if the user enters a valid three letter abbreviation, the program will continue, otherwise it will throw an error
-    if (answers.logo-text.length===3){
-        userTextInput = answers.logo-text;
-    }   else {
-        console.log("Please enter a valid three letter abbreviation for your company!");
-        return;
-    }
-    console.log(`User's text input: ${userTextInput}`);
-    userTextColor = answers.text-color;
-    console.log(`User's text color: ${userTextColor}`);
-    userShapeColor = answers.shape-color;
-    console.log(`User's shape color: ${userShapeColor}`);
-    userShape = answers.shape;
-    console.log(`User's shape: ${userShape}`);
+    userSVGShape.setColor(res.color);
+
+    const userSVG = new SVG();
+    userSVG.setText(res.text, res.textColor);
+    userSVG.setShape(userSVGShape);
+    return writeFile('./Develop/examples/logo.svg', userSVG.render());
+}) .then (() => {
+    console.log("Successfully wrote to examples.svg");
+}) .catch((err) => {
+    console.log(err);
+});
+};
+
+createSVGPrompt();
