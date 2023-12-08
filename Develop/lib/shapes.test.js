@@ -1,6 +1,6 @@
 const { Square, Triangle, Circle } = require("./shapes");
 const SVG = require("./svg");
-
+// the code below is a test for the Square class and its methods and properties
 describe("Circle", () => {
   test("should render svg for a green circle element", () => {
     const expectedSvg = '<circle cx="150" cy="100" r="80" fill="green" />';
@@ -17,7 +17,7 @@ describe("Circle", () => {
     expect(actualSvg).toEqual(expectedSvg);
   });
 });
-
+// the code below is a test for the Triangle class and its methods and properties
 describe("Triangle", () => {
   test("should render svg for a green polygon element", () => {
     const expectedSvg =
@@ -36,7 +36,7 @@ describe("Triangle", () => {
     expect(actualSvg).toEqual(expectedSvg);
   });
 });
-
+// the code below is a test for the Square class and its methods and properties
 describe("Square", () => {
   test("should render svg for a green polygon element", () => {
     const expectedSvg =
@@ -55,7 +55,7 @@ describe("Square", () => {
     expect(actualSvg).toEqual(expectedSvg);
   });
 });
-
+// the code below is a test for the SVG class and its methods and properties
 describe("SVG", () => {
   test("should render a 300 x 200 svg element", () => {
     const expectedSvg =

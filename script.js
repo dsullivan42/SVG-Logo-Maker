@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 const { writeFile } = require('fs').promises;
 const  { Triangle, Square, Circle } = require('./Develop/lib/shapes');
 const SVG = require('./Develop/lib/svg');
-
+// createSVGPrompt function to prompt the user for input and write the SVG file
 const createSVGPrompt = () => {
 
     return inquirer.prompt([
@@ -30,7 +30,7 @@ const createSVGPrompt = () => {
 ]) .then ((res) => {
     console.log(res);
     let userSVGShape;
-
+    // if statements to determine which shape the user chose
     if (res.shape === "Square") {
         userSVGShape = new Square();
     } else if (res.shape === "Circle") {
